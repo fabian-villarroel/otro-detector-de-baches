@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#FFC107"
-        android:text="📸 Reportar Bache"
+        android:text="📸 Reportar Bache."
         android:textColor="#000000"
         android:textStyle="bold" />
 
