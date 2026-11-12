@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -182,7 +181,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null && data.getExtras() != null) {
             Bundle extras = data.getExtras();
             fotoCapturada = (Bitmap) extras.get("data");
             pedirDescripcionYGuardar();
@@ -211,30 +210,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private void guardarBacheEnMySQL(String descripcion, double lat, double lng, Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        String fotoString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        new Thread(() -> {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String fotoString = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_GUARDAR_BACHE,
-                response -> {
-                    Toast.makeText(this, "¡Bache reportado con éxito!", Toast.LENGTH_SHORT).show();
-                    cargarBachesDesdeBD(); // Recargar puntos en el mapa
-                },
-                error -> Toast.makeText(this, "Error al guardar en MySQL", Toast.LENGTH_SHORT).show()) {
+            runOnUiThread(() -> {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_GUARDAR_BACHE,
+                        response -> {
+                            Toast.makeText(this, "¡Bache reportado con éxito!", Toast.LENGTH_SHORT).show();
+                            cargarBachesDesdeBD(); // Recargar puntos en el mapa
+                        },
+                        error -> Toast.makeText(this, "Error al guardar en MySQL", Toast.LENGTH_SHORT).show()) {
 
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("descripcion", descripcion);
-                params.put("latitud", String.valueOf(lat));
-                params.put("longitud", String.valueOf(lng));
-                params.put("foto_base64", fotoString);
-                return params;
-            }
-        };
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("descripcion", descripcion);
+                        params.put("latitud", String.valueOf(lat));
+                        params.put("longitud", String.valueOf(lng));
+                        params.put("foto_base64", fotoString);
+                        return params;
+                    }
+                };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+                Volley.newRequestQueue(this).add(stringRequest);
+            });
+        }).start();
     }
 
     private void mostrarDetalleBache(String titulo, String descripcion, String fotoBase64) {

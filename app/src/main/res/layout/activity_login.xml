@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar Sesión"
+        android:text="@string/login_titulo"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_marginBottom="24dp" />
@@ -20,23 +20,27 @@
         android:id="@+id/etCorreoLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
+        android:minHeight="48dp"
+        android:hint="@string/hint_correo"
         android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress"
         android:layout_marginBottom="12dp" />
 
     <EditText
         android:id="@+id/etClaveLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contraseña"
+        android:minHeight="48dp"
+        android:hint="@string/hint_clave"
         android:inputType="textPassword"
+        android:autofillHints="password"
         android:layout_marginBottom="24dp" />
 
     <Button
         android:id="@+id/btnIngresar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Entrar al Mapa" />
+        android:text="@string/btn_entrar_mapa" />
 
 </LinearLayout>
 

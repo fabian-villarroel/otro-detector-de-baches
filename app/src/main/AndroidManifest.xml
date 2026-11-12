@@ -9,8 +9,13 @@
 
     <uses-feature android:name="android.hardware.camera.any" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -44,9 +49,6 @@
             android:windowSoftInputMode="adjustResize" />
 
 
-        <uses-feature
-            android:name="android.hardware.camera"
-            android:required="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
