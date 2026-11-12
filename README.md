@@ -5,7 +5,7 @@ Aplicación móvil nativa en Android diseñada para el reporte, almacenamiento y
 ---
 
 ##  Tecnologías Utilizadas
-
+ 
 * **Frontend**: Android (Java), Google Maps SDK, Volley.
 * **Backend**: PHP 8.x ejecutado sobre servidor Apache (XAMPP).
 * **Base de Datos**: MySQL / MariaDB (`baches_db`).
